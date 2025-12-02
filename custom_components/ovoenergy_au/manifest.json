@@ -1,0 +1,17 @@
+{
+  "domain": "ovoenergy_au",
+  "name": "OVO Energy Australia",
+  "codeowners": [
+    "@Mattallmighty"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/Mattallmighty/HA-OvoEnergyAU",
+  "integration_type": "hub",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/Mattallmighty/HA-OvoEnergyAU/issues",
+  "requirements": [
+    "aiohttp>=3.8.0",
+    "PyJWT>=2.8.0"
+  ],
+  "version": "1.1.0"
+}

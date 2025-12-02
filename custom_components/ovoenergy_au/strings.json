@@ -1,0 +1,34 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "OVO Energy Australia",
+        "description": "Set up your OVO Energy Australia account to track your energy usage.",
+        "data": {
+          "access_token": "Access Token",
+          "id_token": "ID Token"
+        }
+      },
+      "manual_tokens": {
+        "title": "Manual Token Entry",
+        "description": "Enter your OVO Energy Australia authentication tokens. You can find these in your browser's developer tools after logging in to https://my.ovoenergy.com.au. See {docs_url} for more information.",
+        "data": {
+          "access_token": "Access Token",
+          "id_token": "ID Token"
+        }
+      }
+    },
+    "error": {
+      "auth_failed": "Authentication failed. Please check your credentials.",
+      "cannot_connect": "Cannot connect to OVO Energy API. Please try again later.",
+      "invalid_auth": "Invalid authentication tokens.",
+      "unknown": "Unknown error occurred."
+    },
+    "abort": {
+      "already_configured": "This account is already configured.",
+      "auth_failed": "Authentication failed. Please check your credentials.",
+      "cannot_connect": "Cannot connect to OVO Energy API.",
+      "unknown": "Unknown error occurred."
+    }
+  }
+}
