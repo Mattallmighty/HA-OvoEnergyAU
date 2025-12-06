@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-12-06
+
+### Added
+- **🎉 Username/Password Authentication**: Users can now sign in with email and password instead of manual token entry
+  - Auth0 OAuth2 PKCE flow implemented
+  - Automatic token management behind the scenes
+  - Tokens are automatically refreshed
+- **Hourly Data Support**: Added `get_hourly_data()` API method
+  - Fetch hourly consumption data for specific date ranges
+  - Uses GetHourlyData GraphQL query
+  - Foundation for future hourly sensors
+
+### Changed
+- **BREAKING**: Config flow now requires username/password instead of manual token entry
+- Updated UI strings and translations for new auth flow
+- Added necessary Auth0 constants (OAUTH_LOGIN_URL, OAUTH_CONNECTION, OAUTH_REDIRECT_URI)
+
+### Technical
+- Added PKCE (Proof Key for Code Exchange) parameter generation
+- Implemented full Auth0 authentication flow with callback handling
+- Added comprehensive error handling for authentication failures
+
 ## [1.1.0] - 2025-12-02
 
 ### Added

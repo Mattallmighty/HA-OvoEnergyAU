@@ -3,9 +3,13 @@
 from __future__ import annotations
 
 import asyncio
+import base64
 from datetime import datetime, timedelta
+import hashlib
 import logging
+import secrets
 from typing import Any
+from urllib.parse import parse_qs, urlparse
 
 import aiohttp
 import jwt
@@ -14,10 +18,15 @@ from .const import (
     API_BASE_URL,
     AUTH_BASE_URL,
     GET_CONTACT_INFO_QUERY,
+    GET_HOURLY_DATA_QUERY,
     GET_INTERVAL_DATA_QUERY,
     GRAPHQL_URL,
     OAUTH_AUDIENCE,
+    OAUTH_AUTHORIZE_URL,
     OAUTH_CLIENT_ID,
+    OAUTH_CONNECTION,
+    OAUTH_LOGIN_URL,
+    OAUTH_REDIRECT_URI,
     OAUTH_SCOPES,
     OAUTH_TOKEN_URL,
 )
@@ -167,6 +176,129 @@ class OVOEnergyAUApiClient:
                 "Error refreshing tokens"
             ) from err
 
+    async def authenticate_with_password(
+        self,
+        username: str,
+        password: str,
+    ) -> dict[str, Any]:
+        """Authenticate using username and password via Auth0."""
+        # Generate PKCE parameters
+        code_verifier = base64.urlsafe_b64encode(
+            secrets.token_bytes(32)
+        ).decode('utf-8').rstrip('=')
+        code_challenge = base64.urlsafe_b64encode(
+            hashlib.sha256(code_verifier.encode('utf-8')).digest()
+        ).decode('utf-8').rstrip('=')
+
+        state = base64.urlsafe_b64encode(secrets.token_bytes(32)).decode('utf-8').rstrip('=')
+        nonce = base64.urlsafe_b64encode(secrets.token_bytes(32)).decode('utf-8').rstrip('=')
+
+        _LOGGER.debug("Starting Auth0 authentication flow")
+
+        try:
+            # Step 1: Initial authorize request to get auth state
+            authorize_params = {
+                "client_id": OAUTH_CLIENT_ID,
+                "response_type": "code",
+                "redirect_uri": OAUTH_REDIRECT_URI,
+                "scope": " ".join(OAUTH_SCOPES),
+                "audience": OAUTH_AUDIENCE,
+                "state": state,
+                "nonce": nonce,
+                "code_challenge": code_challenge,
+                "code_challenge_method": "S256",
+            }
+
+            authorize_url = OAUTH_AUTHORIZE_URL + "?" + "&".join(
+                f"{k}={v}" for k, v in authorize_params.items()
+            )
+
+            # Get the authorize page to establish session
+            async with self._session.get(authorize_url, allow_redirects=False) as response:
+                if response.status in [302, 303]:
+                    location = response.headers.get('Location', '')
+                    parsed = urlparse(location)
+                    query_params = parse_qs(parsed.query)
+                    auth_state = query_params.get('state', [state])[0]
+                else:
+                    auth_state = state
+
+            _LOGGER.debug("Got auth state, submitting credentials")
+
+            # Step 2: Submit username/password to login endpoint
+            login_payload = {
+                "client_id": OAUTH_CLIENT_ID,
+                "redirect_uri": OAUTH_REDIRECT_URI,
+                "tenant": "ovoenergyau",
+                "response_type": "code",
+                "scope": " ".join(OAUTH_SCOPES),
+                "audience": OAUTH_AUDIENCE,
+                "state": auth_state,
+                "nonce": nonce,
+                "username": username,
+                "password": password,
+                "connection": OAUTH_CONNECTION,
+            }
+
+            headers = {
+                "content-type": "application/json",
+                "origin": AUTH_BASE_URL,
+                "referer": authorize_url,
+            }
+
+            async with self._session.post(
+                OAUTH_LOGIN_URL,
+                json=login_payload,
+                headers=headers,
+            ) as response:
+                if response.status != 200:
+                    text = await response.text()
+                    raise OVOEnergyAUApiClientAuthenticationError(
+                        f"Login failed: {text[:200]}"
+                    )
+
+                # Auth0 Universal Login returns HTML/JavaScript that performs redirects
+                # We need to follow the callback flow
+                text = await response.text()
+                _LOGGER.debug("Login response received, length: %d", len(text))
+
+            # Step 3: Follow callback redirects to get authorization code
+            # The response contains JavaScript that posts to /login/callback
+            # We need to extract the callback URL and follow it
+            callback_url = f"{AUTH_BASE_URL}/login/callback"
+
+            async with self._session.get(callback_url, allow_redirects=True) as response:
+                # Follow redirects until we get to the final callback with the code
+                final_url = str(response.url)
+                parsed = urlparse(final_url)
+                query_params = parse_qs(parsed.query)
+
+                authorization_code = query_params.get('code', [None])[0]
+                if not authorization_code:
+                    raise OVOEnergyAUApiClientAuthenticationError(
+                        "Could not extract authorization code from callback"
+                    )
+
+                _LOGGER.debug("Got authorization code, exchanging for tokens")
+
+            # Step 4: Exchange authorization code for tokens
+            token_data = await self.exchange_code_for_tokens(
+                code=authorization_code,
+                redirect_uri=OAUTH_REDIRECT_URI,
+                code_verifier=code_verifier,
+            )
+
+            _LOGGER.info("Successfully authenticated with username/password")
+            return token_data
+
+        except OVOEnergyAUApiClientError:
+            raise
+        except Exception as err:
+            _LOGGER.error("Authentication error: %s", err)
+            raise OVOEnergyAUApiClientAuthenticationError(
+                f"Authentication failed: {err}"
+            ) from err
+
     async def _ensure_authenticated(self) -> None:
         """Ensure the client is authenticated."""
         if not self._access_token:
@@ -304,6 +436,74 @@ class OVOEnergyAUApiClient:
                     raise OVOEnergyAUApiClientError("Invalid response from API")
 
                 return data["data"]["GetIntervalData"]
+        except aiohttp.ClientResponseError as err:
+            if err.status == 401:
+                raise OVOEnergyAUApiClientAuthenticationError(
+                    "Authentication failed"
+                ) from err
+            raise OVOEnergyAUApiClientCommunicationError(
+                f"Error communicating with API: {err}"
+            ) from err
+        except aiohttp.ClientError as err:
+            raise OVOEnergyAUApiClientCommunicationError(
+                f"Error communicating with API: {err}"
+            ) from err
+
+    async def get_hourly_data(
+        self,
+        account_id: str,
+        start_date: str,
+        end_date: str,
+    ) -> dict[str, Any]:
+        """Get hourly data for an account within a date range.
+
+        Args:
+            account_id: The account ID
+            start_date: Start date in YYYY-MM-DD format
+            end_date: End date in YYYY-MM-DD format
+        """
+        await self._ensure_authenticated()
+
+        headers = {
+            "accept": "*/*",
+            "authorization": f"Bearer {self._access_token}",
+            "content-type": "application/json",
+            "myovo-id-token": self._id_token,
+            "origin": API_BASE_URL,
+            "referer": f"{API_BASE_URL}/usage",
+        }
+
+        payload = {
+            "operationName": "GetHourlyData",
+            "variables": {
+                "input": {
+                    "accountId": account_id,
+                    "dateRange": {
+                        "startDate": start_date,
+                        "endDate": end_date,
+                    }
+                }
+            },
+            "query": GET_HOURLY_DATA_QUERY
+        }
+
+        try:
+            async with self._session.post(
+                GRAPHQL_URL,
+                json=payload,
+                headers=headers,
+            ) as response:
+                response.raise_for_status()
+                data = await response.json()
+
+                if "errors" in data:
+                    error_messages = [error.get("message", "Unknown error") for error in data["errors"]]
+                    raise OVOEnergyAUApiClientError(f"GraphQL errors: {', '.join(error_messages)}")
+
+                if "data" not in data:
+                    raise OVOEnergyAUApiClientError("Invalid response from API")
+
+                return data["data"]["GetHourlyData"]
         except aiohttp.ClientResponseError as err:
             if err.status == 401:
                 raise OVOEnergyAUApiClientAuthenticationError(

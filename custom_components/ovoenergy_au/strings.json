@@ -3,18 +3,14 @@
     "step": {
       "user": {
         "title": "OVO Energy Australia",
-        "description": "Set up your OVO Energy Australia account to track your energy usage.",
-        "data": {
-          "access_token": "Access Token",
-          "id_token": "ID Token"
-        }
+        "description": "Set up your OVO Energy Australia account to track your energy usage."
       },
-      "manual_tokens": {
-        "title": "Manual Token Entry",
-        "description": "Enter your OVO Energy Australia authentication tokens. You can find these in your browser's developer tools after logging in to https://my.ovoenergy.com.au. See {docs_url} for more information.",
+      "auth": {
+        "title": "Sign in to OVO Energy Australia",
+        "description": "Enter your OVO Energy Australia credentials. Your password is securely transmitted and not stored.",
         "data": {
-          "access_token": "Access Token",
-          "id_token": "ID Token"
+          "username": "Email Address",
+          "password": "Password"
         }
       }
     },

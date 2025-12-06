@@ -16,8 +16,11 @@ GRAPHQL_URL = f"{API_BASE_URL}/graphql"
 OAUTH_CLIENT_ID = "5JHnPn71qgV3LmF3I3xX0KvfRBdROVhR"
 OAUTH_AUTHORIZE_URL = f"{AUTH_BASE_URL}/authorize"
 OAUTH_TOKEN_URL = f"{AUTH_BASE_URL}/oauth/token"
+OAUTH_LOGIN_URL = f"{AUTH_BASE_URL}/usernamepassword/login"
 OAUTH_SCOPES = ["openid", "profile", "email", "offline_access"]
 OAUTH_AUDIENCE = f"{AUTH_BASE_URL}/api"
+OAUTH_CONNECTION = "prod-myovo-auth"  # Auth0 database connection name
+OAUTH_REDIRECT_URI = f"{API_BASE_URL}?login=oea"
 
 # Update intervals
 # Poll daily at 2am since data is only available for yesterday
@@ -114,6 +117,43 @@ query GetIntervalData($input: GetIntervalDataInput!) {
       ...UsageV2DataParts
       __typename
     }
+    __typename
+  }
+}
+
+fragment UsageV2DataParts on UsageV2Data {
+  solar {
+    periodFrom
+    periodTo
+    consumption
+    readType
+    charge {
+      value
+      type
+      __typename
+    }
+    __typename
+  }
+  export {
+    periodFrom
+    periodTo
+    consumption
+    readType
+    charge {
+      value
+      type
+      __typename
+    }
+    __typename
+  }
+  __typename
+}
+"""
+
+GET_HOURLY_DATA_QUERY = """
+query GetHourlyData($input: GetHourlyDataInput!) {
+  GetHourlyData(input: $input) {
+    ...UsageV2DataParts
     __typename
   }
 }

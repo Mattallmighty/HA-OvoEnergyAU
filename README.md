@@ -1,12 +1,14 @@
 # OVO Energy Australia - Home Assistant Integration
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
-![Version](https://img.shields.io/badge/version-1.1.0-green.svg)
+![Version](https://img.shields.io/badge/version-1.2.0-green.svg)
 
 A Home Assistant custom integration for monitoring your OVO Energy Australia account energy usage and costs.
 
 ## Features
 
+- **Easy setup**: Simply enter your OVO Energy email and password
+- **Automatic authentication**: Handles OAuth2 token management automatically behind the scenes
 - Track daily, monthly, and yearly solar consumption
 - Track daily, monthly, and yearly grid consumption (power pulled from grid)
 - Track daily, monthly, and yearly return to grid (power exported back to grid)
@@ -14,7 +16,8 @@ A Home Assistant custom integration for monitoring your OVO Energy Australia acc
   - Grid consumption (DEBIT, FREE, PEAK, OFF_PEAK charges)
   - Return to grid (CREDIT charges - solar export)
 - Monitor energy charges for all consumption types
-- Automatic token refresh
+- **Hourly data support**: API method available for fetching hourly consumption data
+- Automatic token refresh (no need to re-enter credentials)
 - Supports Home Assistant energy dashboard
 - **Smart polling**: Updates automatically every day at 2:00 AM (since OVO data is only available for yesterday)
 - **Manual refresh**: Service available to manually update data on demand
@@ -40,31 +43,26 @@ A Home Assistant custom integration for monitoring your OVO Energy Australia acc
 
 ## Configuration
 
-### Method 1: OAuth2 (Recommended but requires additional setup)
+### Setup
 
-This method requires configuring OAuth2 application credentials in your Home Assistant configuration.
-
-**Note:** This method is more complex and requires external URL access. If you're unable to set this up, use Method 2 below.
-
-### Method 2: Manual Token Entry (Easier)
-
-1. Go to **Settings** -> **Devices & Services**
+1. Go to **Settings** → **Devices & Services**
 2. Click **Add Integration**
 3. Search for "OVO Energy Australia"
-4. Follow the prompts to enter your authentication tokens
+4. Enter your OVO Energy credentials:
+   - **Email Address**: Your OVO Energy account email
+   - **Password**: Your OVO Energy account password
+5. Click **Submit**
 
-#### How to get your tokens:
+That's it! The integration will:
+- Automatically authenticate with OVO Energy
+- Fetch your account details
+- Set up all sensors
+- Automatically refresh tokens in the background
 
-1. Open your web browser and go to [https://my.ovoenergy.com.au](https://my.ovoenergy.com.au)
-2. Log in with your OVO Energy credentials
-3. Open your browser's Developer Tools (F12 or Right-click -> Inspect)
-4. Go to the "Application" or "Storage" tab
-5. Find "Local Storage" -> "https://my.ovoenergy.com.au"
-6. Look for a key starting with `@@auth0spajs@@`
-7. Copy the `access_token` and `id_token` values
-8. Enter these values in the integration setup
-
-**Important:** When you extract tokens from your browser, make sure to copy the `refresh_token` if available. The integration will **automatically refresh your tokens** so you only need to do this setup once! If tokens expire, the integration will seamlessly obtain new ones in the background.
+**Security Notes:**
+- Your password is transmitted securely using HTTPS
+- Your password is NOT stored - only authentication tokens are saved
+- Tokens are automatically refreshed, so you never need to re-enter your password
 
 ## Sensors
 

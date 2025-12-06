@@ -12,7 +12,7 @@ from urllib.parse import urlencode
 import voluptuous as vol
 
 from homeassistant import config_entries
-from homeassistant.const import CONF_ACCESS_TOKEN
+from homeassistant.const import CONF_ACCESS_TOKEN, CONF_PASSWORD, CONF_USERNAME
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers import config_entry_oauth2_flow
@@ -123,18 +123,13 @@ class OVOEnergyAUFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Handle a flow initialized by the user."""
-        # Check if OAuth2 is configured
-        if not self.hass.data.get("auth_implementations", {}).get(DOMAIN):
-            # OAuth2 not configured, show manual token entry
-            return await self.async_step_manual_tokens(user_input)
+        # Always use username/password authentication
+        return await self.async_step_auth(user_input)
 
-        # OAuth2 is configured, use it
-        return await self.async_step_pick_implementation(user_input)
-
-    async def async_step_manual_tokens(
+    async def async_step_auth(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        """Handle manual token entry."""
+        """Handle username/password authentication."""
         errors = {}
 
         if user_input is not None:
@@ -142,10 +137,11 @@ class OVOEnergyAUFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 session = async_get_clientsession(self.hass)
                 client = OVOEnergyAUApiClient(session)
 
-                # Set tokens
-                client.set_tokens(
-                    access_token=user_input[CONF_ACCESS_TOKEN],
-                    id_token=user_input["id_token"],
+                # Authenticate with username/password
+                _LOGGER.info("Attempting authentication for user: %s", user_input[CONF_USERNAME])
+                token_data = await client.authenticate_with_password(
+                    username=user_input[CONF_USERNAME],
+                    password=user_input[CONF_PASSWORD],
                 )
 
                 # Get account ID
@@ -156,27 +152,30 @@ class OVOEnergyAUFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     return self.async_create_entry(
                         title=f"OVO Energy AU ({account_id})",
                         data={
-                            CONF_ACCESS_TOKEN: user_input[CONF_ACCESS_TOKEN],
-                            "id_token": user_input["id_token"],
+                            CONF_ACCESS_TOKEN: token_data["access_token"],
+                            "id_token": token_data["id_token"],
+                            "refresh_token": token_data.get("refresh_token"),
                             CONF_ACCOUNT_ID: account_id,
                         },
                     )
                 errors["base"] = ERROR_CANNOT_CONNECT
-            except OVOEnergyAUApiClientAuthenticationError:
+            except OVOEnergyAUApiClientAuthenticationError as err:
+                _LOGGER.error("Authentication failed: %s", err)
                 errors["base"] = ERROR_AUTH_FAILED
-            except OVOEnergyAUApiClientCommunicationError:
+            except OVOEnergyAUApiClientCommunicationError as err:
+                _LOGGER.error("Communication error: %s", err)
                 errors["base"] = ERROR_CANNOT_CONNECT
-            except Exception:
-                _LOGGER.exception("Unexpected exception")
+            except Exception as err:
+                _LOGGER.exception("Unexpected exception: %s", err)
                 errors["base"] = ERROR_UNKNOWN
 
-        # Show form for manual token entry
+        # Show form for username/password entry
         return self.async_show_form(
-            step_id="manual_tokens",
+            step_id="auth",
             data_schema=vol.Schema(
                 {
-                    vol.Required(CONF_ACCESS_TOKEN): str,
-                    vol.Required("id_token"): str,
+                    vol.Required(CONF_USERNAME): str,
+                    vol.Required(CONF_PASSWORD): str,
                 }
             ),
             errors=errors,
