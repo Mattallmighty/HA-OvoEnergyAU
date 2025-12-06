@@ -6,7 +6,9 @@ import asyncio
 import base64
 from datetime import datetime, timedelta
 import hashlib
+import html
 import logging
+import re
 import secrets
 from typing import Any
 from urllib.parse import parse_qs, urlparse
@@ -257,17 +259,48 @@ class OVOEnergyAUApiClient:
                         f"Login failed: {text[:200]}"
                     )
 
-                # Auth0 Universal Login returns HTML/JavaScript that performs redirects
-                # We need to follow the callback flow
+                # Auth0 Universal Login returns HTML form that needs to be submitted
                 text = await response.text()
                 _LOGGER.debug("Login response received, length: %d", len(text))
 
-            # Step 3: Follow callback redirects to get authorization code
-            # The response contains JavaScript that posts to /login/callback
-            # We need to extract the callback URL and follow it
-            callback_url = f"{AUTH_BASE_URL}/login/callback"
+            # Step 3: Parse the HTML form response and extract hidden fields
+            _LOGGER.debug("Parsing form response")
 
-            async with self._session.get(callback_url, allow_redirects=True) as response:
+            # Extract form action URL
+            action_match = re.search(r'action="([^"]+)"', text)
+            if not action_match:
+                raise OVOEnergyAUApiClientAuthenticationError(
+                    "Could not find form action in response"
+                )
+
+            form_action = html.unescape(action_match.group(1))
+
+            # Extract hidden field values (handle multi-line and HTML entities)
+            form_data = {}
+            for match in re.finditer(
+                r'<input[^>]+type="hidden"[^>]+name="([^"]+)"[^>]+value="([^"]*)"',
+                text,
+                re.DOTALL
+            ):
+                field_name = match.group(1)
+                field_value = html.unescape(match.group(2))
+                form_data[field_name] = field_value
+
+            if not form_data:
+                raise OVOEnergyAUApiClientAuthenticationError(
+                    "No hidden fields found in login response"
+                )
+
+            _LOGGER.debug("Found %d form fields", len(form_data))
+
+            # Step 4: Submit the form to the callback URL
+            _LOGGER.debug("Submitting form to callback")
+            async with self._session.post(
+                form_action,
+                data=form_data,
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+                allow_redirects=True
+            ) as response:
                 # Follow redirects until we get to the final callback with the code
                 final_url = str(response.url)
                 parsed = urlparse(final_url)
@@ -281,7 +314,7 @@ class OVOEnergyAUApiClient:
 
                 _LOGGER.debug("Got authorization code, exchanging for tokens")
 
-            # Step 4: Exchange authorization code for tokens
+            # Step 5: Exchange authorization code for tokens
             token_data = await self.exchange_code_for_tokens(
                 code=authorization_code,
                 redirect_uri=OAUTH_REDIRECT_URI,
