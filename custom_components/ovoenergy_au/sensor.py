@@ -217,6 +217,46 @@ SENSOR_DESCRIPTIONS: tuple[OVOEnergyAUSensorEntityDescription, ...] = (
         icon="mdi:currency-usd",
         value_fn=lambda data: data.get("yearly", {}).get("return_to_grid_charge"),
     ),
+    # Hourly sensors
+    OVOEnergyAUSensorEntityDescription(
+        key="hourly_solar_consumption",
+        name="Hourly Solar Consumption",
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL,
+        icon="mdi:solar-power",
+        value_fn=lambda data: data.get("hourly", {}).get("solar_total"),
+        attr_fn=lambda data: {
+            "entries": data.get("hourly", {}).get("solar_entries", []),
+            "entry_count": len(data.get("hourly", {}).get("solar_entries", [])),
+        },
+    ),
+    OVOEnergyAUSensorEntityDescription(
+        key="hourly_grid_consumption",
+        name="Hourly Grid Consumption",
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL,
+        icon="mdi:transmission-tower",
+        value_fn=lambda data: data.get("hourly", {}).get("grid_total"),
+        attr_fn=lambda data: {
+            "entries": data.get("hourly", {}).get("grid_entries", []),
+            "entry_count": len(data.get("hourly", {}).get("grid_entries", [])),
+        },
+    ),
+    OVOEnergyAUSensorEntityDescription(
+        key="hourly_return_to_grid",
+        name="Hourly Return to Grid",
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL,
+        icon="mdi:transmission-tower-export",
+        value_fn=lambda data: data.get("hourly", {}).get("return_to_grid_total"),
+        attr_fn=lambda data: {
+            "entries": data.get("hourly", {}).get("return_to_grid_entries", []),
+            "entry_count": len(data.get("hourly", {}).get("return_to_grid_entries", [])),
+        },
+    ),
 )
 
 

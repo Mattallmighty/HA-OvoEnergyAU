@@ -28,6 +28,9 @@ UPDATE_INTERVAL = timedelta(hours=24)
 UPDATE_HOUR = 2  # 2am daily
 FAST_UPDATE_INTERVAL = timedelta(minutes=5)  # For manual refresh
 
+# Hourly data settings
+HOURLY_DATA_DAYS = 7  # Fetch hourly data for last 7 days
+
 # Sensor types
 SENSOR_TYPES = {
     "solar_consumption": {

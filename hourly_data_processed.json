@@ -1,0 +1,1185 @@
+{
+  "solar_entries": [],
+  "grid_entries": [
+    {
+      "period_from": "2025-11-28T14:00:00.000Z",
+      "period_to": "2025-11-28T15:00:00.000Z",
+      "consumption": 0.275,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-28T15:00:00.000Z",
+      "period_to": "2025-11-28T16:00:00.000Z",
+      "consumption": 0.2562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-28T16:00:00.000Z",
+      "period_to": "2025-11-28T17:00:00.000Z",
+      "consumption": 0.3187,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-28T17:00:00.000Z",
+      "period_to": "2025-11-28T18:00:00.000Z",
+      "consumption": 0.25,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-28T18:00:00.000Z",
+      "period_to": "2025-11-28T19:00:00.000Z",
+      "consumption": 0.2249,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-28T19:00:00.000Z",
+      "period_to": "2025-11-28T20:00:00.000Z",
+      "consumption": 0.2187,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-28T20:00:00.000Z",
+      "period_to": "2025-11-28T21:00:00.000Z",
+      "consumption": 0.3312,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-28T21:00:00.000Z",
+      "period_to": "2025-11-28T22:00:00.000Z",
+      "consumption": 0.7249,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-28T22:00:00.000Z",
+      "period_to": "2025-11-28T23:00:00.000Z",
+      "consumption": 1.0624,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-28T23:00:00.000Z",
+      "period_to": "2025-11-29T00:00:00.000Z",
+      "consumption": 2.8686999999999996,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T00:00:00.000Z",
+      "period_to": "2025-11-29T01:00:00.000Z",
+      "consumption": 1.5875,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T01:00:00.000Z",
+      "period_to": "2025-11-29T02:00:00.000Z",
+      "consumption": 1.3062,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T02:00:00.000Z",
+      "period_to": "2025-11-29T03:00:00.000Z",
+      "consumption": 0.8625,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T03:00:00.000Z",
+      "period_to": "2025-11-29T04:00:00.000Z",
+      "consumption": 1.6187,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T04:00:00.000Z",
+      "period_to": "2025-11-29T05:00:00.000Z",
+      "consumption": 0.4124,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T05:00:00.000Z",
+      "period_to": "2025-11-29T06:00:00.000Z",
+      "consumption": 0.5125,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T06:00:00.000Z",
+      "period_to": "2025-11-29T07:00:00.000Z",
+      "consumption": 0.35,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T07:00:00.000Z",
+      "period_to": "2025-11-29T08:00:00.000Z",
+      "consumption": 0.325,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T08:00:00.000Z",
+      "period_to": "2025-11-29T09:00:00.000Z",
+      "consumption": 0.3437,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T09:00:00.000Z",
+      "period_to": "2025-11-29T10:00:00.000Z",
+      "consumption": 0.4312,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T10:00:00.000Z",
+      "period_to": "2025-11-29T11:00:00.000Z",
+      "consumption": 0.48750000000000004,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T11:00:00.000Z",
+      "period_to": "2025-11-29T12:00:00.000Z",
+      "consumption": 0.7187,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T12:00:00.000Z",
+      "period_to": "2025-11-29T13:00:00.000Z",
+      "consumption": 0.4625,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T13:00:00.000Z",
+      "period_to": "2025-11-29T14:00:00.000Z",
+      "consumption": 0.2437,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T14:00:00.000Z",
+      "period_to": "2025-11-29T15:00:00.000Z",
+      "consumption": 0.2375,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T15:00:00.000Z",
+      "period_to": "2025-11-29T16:00:00.000Z",
+      "consumption": 0.2375,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T16:00:00.000Z",
+      "period_to": "2025-11-29T17:00:00.000Z",
+      "consumption": 0.2187,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T17:00:00.000Z",
+      "period_to": "2025-11-29T18:00:00.000Z",
+      "consumption": 0.225,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T18:00:00.000Z",
+      "period_to": "2025-11-29T19:00:00.000Z",
+      "consumption": 0.2187,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T19:00:00.000Z",
+      "period_to": "2025-11-29T20:00:00.000Z",
+      "consumption": 0.2187,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T20:00:00.000Z",
+      "period_to": "2025-11-29T21:00:00.000Z",
+      "consumption": 0.2249,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T21:00:00.000Z",
+      "period_to": "2025-11-29T22:00:00.000Z",
+      "consumption": 0.32489999999999997,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T22:00:00.000Z",
+      "period_to": "2025-11-29T23:00:00.000Z",
+      "consumption": 1.0125,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-29T23:00:00.000Z",
+      "period_to": "2025-11-30T00:00:00.000Z",
+      "consumption": 3.3,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T00:00:00.000Z",
+      "period_to": "2025-11-30T01:00:00.000Z",
+      "consumption": 1.3125,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T01:00:00.000Z",
+      "period_to": "2025-11-30T02:00:00.000Z",
+      "consumption": 0.3687,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T02:00:00.000Z",
+      "period_to": "2025-11-30T03:00:00.000Z",
+      "consumption": 0.23120000000000002,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T03:00:00.000Z",
+      "period_to": "2025-11-30T04:00:00.000Z",
+      "consumption": 0.23120000000000002,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T04:00:00.000Z",
+      "period_to": "2025-11-30T05:00:00.000Z",
+      "consumption": 0.23120000000000002,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T05:00:00.000Z",
+      "period_to": "2025-11-30T06:00:00.000Z",
+      "consumption": 0.225,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T06:00:00.000Z",
+      "period_to": "2025-11-30T07:00:00.000Z",
+      "consumption": 0.2374,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T07:00:00.000Z",
+      "period_to": "2025-11-30T08:00:00.000Z",
+      "consumption": 0.225,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T08:00:00.000Z",
+      "period_to": "2025-11-30T09:00:00.000Z",
+      "consumption": 0.2687,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T09:00:00.000Z",
+      "period_to": "2025-11-30T10:00:00.000Z",
+      "consumption": 0.4124,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T10:00:00.000Z",
+      "period_to": "2025-11-30T11:00:00.000Z",
+      "consumption": 0.4062,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T11:00:00.000Z",
+      "period_to": "2025-11-30T12:00:00.000Z",
+      "consumption": 1.3812,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T12:00:00.000Z",
+      "period_to": "2025-11-30T13:00:00.000Z",
+      "consumption": 0.23120000000000002,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T13:00:00.000Z",
+      "period_to": "2025-11-30T14:00:00.000Z",
+      "consumption": 0.2187,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T14:00:00.000Z",
+      "period_to": "2025-11-30T15:00:00.000Z",
+      "consumption": 0.2187,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T15:00:00.000Z",
+      "period_to": "2025-11-30T16:00:00.000Z",
+      "consumption": 0.2187,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T16:00:00.000Z",
+      "period_to": "2025-11-30T17:00:00.000Z",
+      "consumption": 0.2187,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T17:00:00.000Z",
+      "period_to": "2025-11-30T18:00:00.000Z",
+      "consumption": 0.225,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T18:00:00.000Z",
+      "period_to": "2025-11-30T19:00:00.000Z",
+      "consumption": 0.21250000000000002,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T19:00:00.000Z",
+      "period_to": "2025-11-30T20:00:00.000Z",
+      "consumption": 0.2437,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T20:00:00.000Z",
+      "period_to": "2025-11-30T21:00:00.000Z",
+      "consumption": 0.3437,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T21:00:00.000Z",
+      "period_to": "2025-11-30T22:00:00.000Z",
+      "consumption": 0.3187,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T22:00:00.000Z",
+      "period_to": "2025-11-30T23:00:00.000Z",
+      "consumption": 0.8311999999999999,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-11-30T23:00:00.000Z",
+      "period_to": "2025-12-01T00:00:00.000Z",
+      "consumption": 1.9436999999999998,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T00:00:00.000Z",
+      "period_to": "2025-12-01T01:00:00.000Z",
+      "consumption": 0.6000000000000001,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T01:00:00.000Z",
+      "period_to": "2025-12-01T02:00:00.000Z",
+      "consumption": 0.5062,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T02:00:00.000Z",
+      "period_to": "2025-12-01T03:00:00.000Z",
+      "consumption": 1.9311999999999998,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T03:00:00.000Z",
+      "period_to": "2025-12-01T04:00:00.000Z",
+      "consumption": 0.5937,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T04:00:00.000Z",
+      "period_to": "2025-12-01T05:00:00.000Z",
+      "consumption": 0.6312,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T05:00:00.000Z",
+      "period_to": "2025-12-01T06:00:00.000Z",
+      "consumption": 1.1875,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T06:00:00.000Z",
+      "period_to": "2025-12-01T07:00:00.000Z",
+      "consumption": 0.5687,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T07:00:00.000Z",
+      "period_to": "2025-12-01T08:00:00.000Z",
+      "consumption": 0.5874,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T08:00:00.000Z",
+      "period_to": "2025-12-01T09:00:00.000Z",
+      "consumption": 0.5937,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T09:00:00.000Z",
+      "period_to": "2025-12-01T10:00:00.000Z",
+      "consumption": 1.2624,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T10:00:00.000Z",
+      "period_to": "2025-12-01T11:00:00.000Z",
+      "consumption": 0.6312,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T11:00:00.000Z",
+      "period_to": "2025-12-01T12:00:00.000Z",
+      "consumption": 0.29369999999999996,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T12:00:00.000Z",
+      "period_to": "2025-12-01T13:00:00.000Z",
+      "consumption": 1.2749,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T13:00:00.000Z",
+      "period_to": "2025-12-01T14:00:00.000Z",
+      "consumption": 0.1812,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T14:00:00.000Z",
+      "period_to": "2025-12-01T15:00:00.000Z",
+      "consumption": 0.16870000000000002,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T15:00:00.000Z",
+      "period_to": "2025-12-01T16:00:00.000Z",
+      "consumption": 0.1687,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T16:00:00.000Z",
+      "period_to": "2025-12-01T17:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T17:00:00.000Z",
+      "period_to": "2025-12-01T18:00:00.000Z",
+      "consumption": 0.14989999999999998,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T18:00:00.000Z",
+      "period_to": "2025-12-01T19:00:00.000Z",
+      "consumption": 0.30619999999999997,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T19:00:00.000Z",
+      "period_to": "2025-12-01T20:00:00.000Z",
+      "consumption": 0.44999999999999996,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T20:00:00.000Z",
+      "period_to": "2025-12-01T21:00:00.000Z",
+      "consumption": 0.23120000000000002,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T21:00:00.000Z",
+      "period_to": "2025-12-01T22:00:00.000Z",
+      "consumption": 0.2687,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T22:00:00.000Z",
+      "period_to": "2025-12-01T23:00:00.000Z",
+      "consumption": 0.2499,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-01T23:00:00.000Z",
+      "period_to": "2025-12-02T00:00:00.000Z",
+      "consumption": 0.2375,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T00:00:00.000Z",
+      "period_to": "2025-12-02T01:00:00.000Z",
+      "consumption": 0.2187,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T01:00:00.000Z",
+      "period_to": "2025-12-02T02:00:00.000Z",
+      "consumption": 0.3249,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T02:00:00.000Z",
+      "period_to": "2025-12-02T03:00:00.000Z",
+      "consumption": 0.6124,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T03:00:00.000Z",
+      "period_to": "2025-12-02T04:00:00.000Z",
+      "consumption": 0.8125,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T04:00:00.000Z",
+      "period_to": "2025-12-02T05:00:00.000Z",
+      "consumption": 1.6686999999999999,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T05:00:00.000Z",
+      "period_to": "2025-12-02T06:00:00.000Z",
+      "consumption": 0.7874000000000001,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T06:00:00.000Z",
+      "period_to": "2025-12-02T07:00:00.000Z",
+      "consumption": 0.3937,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T07:00:00.000Z",
+      "period_to": "2025-12-02T08:00:00.000Z",
+      "consumption": 0.3187,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T08:00:00.000Z",
+      "period_to": "2025-12-02T09:00:00.000Z",
+      "consumption": 1.0812,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T09:00:00.000Z",
+      "period_to": "2025-12-02T10:00:00.000Z",
+      "consumption": 4.3187,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T10:00:00.000Z",
+      "period_to": "2025-12-02T11:00:00.000Z",
+      "consumption": 2.7874,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T11:00:00.000Z",
+      "period_to": "2025-12-02T12:00:00.000Z",
+      "consumption": 1.0374,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T12:00:00.000Z",
+      "period_to": "2025-12-02T13:00:00.000Z",
+      "consumption": 0.5499,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T13:00:00.000Z",
+      "period_to": "2025-12-02T14:00:00.000Z",
+      "consumption": 0.2062,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T14:00:00.000Z",
+      "period_to": "2025-12-02T15:00:00.000Z",
+      "consumption": 0.21250000000000002,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T15:00:00.000Z",
+      "period_to": "2025-12-02T16:00:00.000Z",
+      "consumption": 0.21250000000000002,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T16:00:00.000Z",
+      "period_to": "2025-12-02T17:00:00.000Z",
+      "consumption": 0.1875,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T17:00:00.000Z",
+      "period_to": "2025-12-02T18:00:00.000Z",
+      "consumption": 0.2062,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T18:00:00.000Z",
+      "period_to": "2025-12-02T19:00:00.000Z",
+      "consumption": 0.4687,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T19:00:00.000Z",
+      "period_to": "2025-12-02T20:00:00.000Z",
+      "consumption": 0.1624,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T20:00:00.000Z",
+      "period_to": "2025-12-02T21:00:00.000Z",
+      "consumption": 0.175,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T21:00:00.000Z",
+      "period_to": "2025-12-02T22:00:00.000Z",
+      "consumption": 0.2687,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T22:00:00.000Z",
+      "period_to": "2025-12-02T23:00:00.000Z",
+      "consumption": 0.175,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-02T23:00:00.000Z",
+      "period_to": "2025-12-03T00:00:00.000Z",
+      "consumption": 0.1875,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T00:00:00.000Z",
+      "period_to": "2025-12-03T01:00:00.000Z",
+      "consumption": 0.16249999999999998,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T01:00:00.000Z",
+      "period_to": "2025-12-03T02:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T02:00:00.000Z",
+      "period_to": "2025-12-03T03:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T03:00:00.000Z",
+      "period_to": "2025-12-03T04:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T04:00:00.000Z",
+      "period_to": "2025-12-03T05:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T05:00:00.000Z",
+      "period_to": "2025-12-03T06:00:00.000Z",
+      "consumption": 0.1624,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T06:00:00.000Z",
+      "period_to": "2025-12-03T07:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T07:00:00.000Z",
+      "period_to": "2025-12-03T08:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T08:00:00.000Z",
+      "period_to": "2025-12-03T09:00:00.000Z",
+      "consumption": 0.16870000000000002,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T09:00:00.000Z",
+      "period_to": "2025-12-03T10:00:00.000Z",
+      "consumption": 0.2437,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T10:00:00.000Z",
+      "period_to": "2025-12-03T11:00:00.000Z",
+      "consumption": 0.2124,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T11:00:00.000Z",
+      "period_to": "2025-12-03T12:00:00.000Z",
+      "consumption": 0.1624,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T12:00:00.000Z",
+      "period_to": "2025-12-03T13:00:00.000Z",
+      "consumption": 1.1937,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T13:00:00.000Z",
+      "period_to": "2025-12-03T14:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T14:00:00.000Z",
+      "period_to": "2025-12-03T15:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T15:00:00.000Z",
+      "period_to": "2025-12-03T16:00:00.000Z",
+      "consumption": 0.16870000000000002,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T16:00:00.000Z",
+      "period_to": "2025-12-03T17:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T17:00:00.000Z",
+      "period_to": "2025-12-03T18:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T18:00:00.000Z",
+      "period_to": "2025-12-03T19:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T19:00:00.000Z",
+      "period_to": "2025-12-03T20:00:00.000Z",
+      "consumption": 0.1874,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T20:00:00.000Z",
+      "period_to": "2025-12-03T21:00:00.000Z",
+      "consumption": 0.1937,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T21:00:00.000Z",
+      "period_to": "2025-12-03T22:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T22:00:00.000Z",
+      "period_to": "2025-12-03T23:00:00.000Z",
+      "consumption": 0.1624,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-03T23:00:00.000Z",
+      "period_to": "2025-12-04T00:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T00:00:00.000Z",
+      "period_to": "2025-12-04T01:00:00.000Z",
+      "consumption": 0.1624,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T01:00:00.000Z",
+      "period_to": "2025-12-04T02:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T02:00:00.000Z",
+      "period_to": "2025-12-04T03:00:00.000Z",
+      "consumption": 0.16249999999999998,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T03:00:00.000Z",
+      "period_to": "2025-12-04T04:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T04:00:00.000Z",
+      "period_to": "2025-12-04T05:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T05:00:00.000Z",
+      "period_to": "2025-12-04T06:00:00.000Z",
+      "consumption": 0.1624,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T06:00:00.000Z",
+      "period_to": "2025-12-04T07:00:00.000Z",
+      "consumption": 0.16249999999999998,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T07:00:00.000Z",
+      "period_to": "2025-12-04T08:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T08:00:00.000Z",
+      "period_to": "2025-12-04T09:00:00.000Z",
+      "consumption": 0.175,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T09:00:00.000Z",
+      "period_to": "2025-12-04T10:00:00.000Z",
+      "consumption": 0.2562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T10:00:00.000Z",
+      "period_to": "2025-12-04T11:00:00.000Z",
+      "consumption": 0.2187,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T11:00:00.000Z",
+      "period_to": "2025-12-04T12:00:00.000Z",
+      "consumption": 0.2687,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T12:00:00.000Z",
+      "period_to": "2025-12-04T13:00:00.000Z",
+      "consumption": 0.1812,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T13:00:00.000Z",
+      "period_to": "2025-12-04T14:00:00.000Z",
+      "consumption": 0.1687,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T14:00:00.000Z",
+      "period_to": "2025-12-04T15:00:00.000Z",
+      "consumption": 0.16249999999999998,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T15:00:00.000Z",
+      "period_to": "2025-12-04T16:00:00.000Z",
+      "consumption": 0.1624,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T16:00:00.000Z",
+      "period_to": "2025-12-04T17:00:00.000Z",
+      "consumption": 1.1937,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T17:00:00.000Z",
+      "period_to": "2025-12-04T18:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T18:00:00.000Z",
+      "period_to": "2025-12-04T19:00:00.000Z",
+      "consumption": 0.1624,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T19:00:00.000Z",
+      "period_to": "2025-12-04T20:00:00.000Z",
+      "consumption": 0.1749,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T20:00:00.000Z",
+      "period_to": "2025-12-04T21:00:00.000Z",
+      "consumption": 0.1875,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T21:00:00.000Z",
+      "period_to": "2025-12-04T22:00:00.000Z",
+      "consumption": 0.1624,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T22:00:00.000Z",
+      "period_to": "2025-12-04T23:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-04T23:00:00.000Z",
+      "period_to": "2025-12-05T00:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-05T00:00:00.000Z",
+      "period_to": "2025-12-05T01:00:00.000Z",
+      "consumption": 0.16249999999999998,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-05T01:00:00.000Z",
+      "period_to": "2025-12-05T02:00:00.000Z",
+      "consumption": 0.1624,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-05T02:00:00.000Z",
+      "period_to": "2025-12-05T03:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-05T03:00:00.000Z",
+      "period_to": "2025-12-05T04:00:00.000Z",
+      "consumption": 0.16249999999999998,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-05T04:00:00.000Z",
+      "period_to": "2025-12-05T05:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-05T05:00:00.000Z",
+      "period_to": "2025-12-05T06:00:00.000Z",
+      "consumption": 0.1624,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-05T06:00:00.000Z",
+      "period_to": "2025-12-05T07:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-05T07:00:00.000Z",
+      "period_to": "2025-12-05T08:00:00.000Z",
+      "consumption": 0.1624,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-05T08:00:00.000Z",
+      "period_to": "2025-12-05T09:00:00.000Z",
+      "consumption": 0.16870000000000002,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-05T09:00:00.000Z",
+      "period_to": "2025-12-05T10:00:00.000Z",
+      "consumption": 0.2437,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-05T10:00:00.000Z",
+      "period_to": "2025-12-05T11:00:00.000Z",
+      "consumption": 0.2124,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-05T11:00:00.000Z",
+      "period_to": "2025-12-05T12:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-05T12:00:00.000Z",
+      "period_to": "2025-12-05T13:00:00.000Z",
+      "consumption": 0.1624,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    },
+    {
+      "period_from": "2025-12-05T13:00:00.000Z",
+      "period_to": "2025-12-05T14:00:00.000Z",
+      "consumption": 0.1562,
+      "charge": 0,
+      "charge_type": "DEBIT"
+    }
+  ],
+  "return_to_grid_entries": [],
+  "solar_total": 0,
+  "grid_total": 76.41670000000002,
+  "return_to_grid_total": 0
+}

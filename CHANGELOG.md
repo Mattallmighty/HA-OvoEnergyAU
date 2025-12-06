@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-12-06
+
+### Added
+- **Hourly Data Support**: Integration now fetches hourly consumption data for graphing in Home Assistant
+  - Fetches hourly data for the last 7 days during the 2am daily update
+  - 3 new hourly sensors added:
+    - `hourly_solar_consumption` - Total solar consumption with hourly breakdown
+    - `hourly_grid_consumption` - Total grid consumption with hourly breakdown
+    - `hourly_return_to_grid` - Total return to grid with hourly breakdown
+  - Each hourly sensor includes all hourly entries as attributes for detailed graphing
+  - Hourly data automatically refreshes daily at 2am
+- Added `HOURLY_DATA_DAYS` constant to configure how many days of hourly data to fetch
+
+### Changed
+- Coordinator now fetches both interval data (daily/monthly/yearly) and hourly data in a single update
+- Total sensor count increased from 18 to 21
+
+### Technical
+- Added `_process_hourly_data()` method to coordinator for processing hourly entries
+- Hourly data keeps all entries (not just latest) to enable Home Assistant graphing
+- Hourly sensors expose consumption totals as state and hourly entries as attributes
+
+## [1.2.1] - 2025-12-06
+
+### Fixed
+- **CRITICAL BUG FIX**: Coordinator was summing ALL historical data instead of using latest period
+  - Daily sensors now show only the most recent day's data (not sum of all 577 days)
+  - Monthly sensors now show only the current month's data (not sum of all 20 months)
+  - Yearly sensors now show only the current year's data (not sum of both years)
+  - This fixes the issue where all periods showed identical totals (10,749.06 kWh)
+
+### Technical
+- Updated `_process_data()` to use only the last entry from API response arrays
+- Added documentation explaining API returns arrays of historical data
+
 ## [1.2.0] - 2025-12-06
 
 ### Added

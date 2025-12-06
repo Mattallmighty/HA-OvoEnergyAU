@@ -1,7 +1,7 @@
 # OVO Energy Australia - Home Assistant Integration
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
-![Version](https://img.shields.io/badge/version-1.2.0-green.svg)
+![Version](https://img.shields.io/badge/version-1.3.0-green.svg)
 
 A Home Assistant custom integration for monitoring your OVO Energy Australia account energy usage and costs.
 
@@ -16,7 +16,10 @@ A Home Assistant custom integration for monitoring your OVO Energy Australia acc
   - Grid consumption (DEBIT, FREE, PEAK, OFF_PEAK charges)
   - Return to grid (CREDIT charges - solar export)
 - Monitor energy charges for all consumption types
-- **Hourly data support**: API method available for fetching hourly consumption data
+- **Hourly data support**: Automatically fetches hourly consumption data for detailed graphing
+  - Fetches last 7 days of hourly data during the 2am daily update
+  - Hourly data available for solar, grid consumption, and return to grid
+  - Perfect for Home Assistant energy dashboard graphs
 - Automatic token refresh (no need to re-enter credentials)
 - Supports Home Assistant energy dashboard
 - **Smart polling**: Updates automatically every day at 2:00 AM (since OVO data is only available for yesterday)
@@ -66,7 +69,7 @@ That's it! The integration will:
 
 ## Sensors
 
-The integration provides 18 sensors across three time periods:
+The integration provides 21 sensors across multiple time periods:
 
 ### Daily Sensors
 
@@ -94,6 +97,20 @@ The integration provides 18 sensors across three time periods:
 - **Yearly Solar Charge** - Total cost for solar usage this year (AUD)
 - **Yearly Grid Charge** - Total cost for grid energy this year (AUD)
 - **Yearly Return to Grid Charge** - Credit/charge for energy returned to grid this year (AUD)
+
+### Hourly Sensors
+
+- **Hourly Solar Consumption** - Total solar energy consumed in the last 7 days (kWh)
+  - Includes hourly breakdown in attributes for detailed graphing
+  - Each entry contains timestamp, consumption, and charge information
+- **Hourly Grid Consumption** - Total energy consumed from the grid in the last 7 days (kWh)
+  - Includes hourly breakdown with charge type (DEBIT, FREE, PEAK, OFF_PEAK)
+  - Perfect for analyzing peak vs off-peak usage patterns
+- **Hourly Return to Grid** - Total energy exported back to grid in the last 7 days (kWh)
+  - Includes hourly breakdown for tracking solar export patterns
+  - Shows credits earned for each hour
+
+**Note**: Hourly data is automatically fetched during the 2am daily update and covers the last 7 days. The sensor attributes contain all hourly entries which can be used for creating custom graphs in Home Assistant.
 
 ## Energy Dashboard Integration
 
