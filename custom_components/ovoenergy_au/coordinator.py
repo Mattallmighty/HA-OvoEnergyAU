@@ -17,7 +17,7 @@ from .api import (
     OVOEnergyAUApiClientCommunicationError,
     OVOEnergyAUApiClientError,
 )
-from .const import DOMAIN, UPDATE_HOUR, UPDATE_INTERVAL, HOURLY_DATA_DAYS
+from .const import DOMAIN, UPDATE_HOUR, UPDATE_INTERVAL
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -80,19 +80,20 @@ class OVOEnergyAUDataUpdateCoordinator(DataUpdateCoordinator):
             interval_data = await self.client.get_interval_data(self.account_id)
             processed_data = self._process_data(interval_data)
 
-            # Fetch hourly data for the last N days
+            # Fetch hourly data for yesterday only (the day before today)
+            # Data is typically available the day after consumption
             now = dt_util.now()
-            end_date = now.strftime("%Y-%m-%d")
-            start_date = (now - timedelta(days=HOURLY_DATA_DAYS)).strftime("%Y-%m-%d")
+            yesterday = now - timedelta(days=1)
+            yesterday_date = yesterday.strftime("%Y-%m-%d")
 
             try:
                 hourly_data = await self.client.get_hourly_data(
                     self.account_id,
-                    start_date,
-                    end_date,
+                    yesterday_date,
+                    yesterday_date,
                 )
                 processed_data["hourly"] = self._process_hourly_data(hourly_data)
-                _LOGGER.debug("Successfully fetched hourly data from %s to %s", start_date, end_date)
+                _LOGGER.debug("Successfully fetched hourly data for yesterday: %s", yesterday_date)
             except Exception as err:
                 _LOGGER.warning("Failed to fetch hourly data: %s", err)
                 processed_data["hourly"] = {}

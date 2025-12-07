@@ -29,7 +29,9 @@ UPDATE_HOUR = 2  # 2am daily
 FAST_UPDATE_INTERVAL = timedelta(minutes=5)  # For manual refresh
 
 # Hourly data settings
-HOURLY_DATA_DAYS = 7  # Fetch hourly data for last 7 days
+# Note: Hourly data now fetches only yesterday's data (the day before today)
+# This ensures the sensor displays hourly consumption for the previous day
+HOURLY_DATA_DAYS = 1  # DEPRECATED: Now always fetches yesterday only
 
 # Sensor types
 SENSOR_TYPES = {
