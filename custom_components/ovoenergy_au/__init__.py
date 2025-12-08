@@ -43,10 +43,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             refresh_token=entry.data.get("refresh_token"),
         )
 
-    # Proactively refresh token if expired before first API call
-    # This prevents the "HTML instead of JSON" error during setup
+    # Only refresh token during setup if it's ACTUALLY expired (not just within buffer)
+    # This prevents trying to refresh tokens that were just created
     if client.token_expired and client._refresh_token:
-        _LOGGER.info("Token expired, refreshing before setup")
+        _LOGGER.info("Token is expired, attempting refresh before setup")
         try:
             new_token_data = await client.refresh_tokens()
 
@@ -79,6 +79,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         except Exception as err:
             _LOGGER.error("Failed to refresh expired token during setup: %s", err)
             raise
+    elif client.should_refresh and not client.token_expired:
+        # Token is valid but expiring soon - don't refresh during setup, let normal operation handle it
+        _LOGGER.debug(
+            "Token expires soon but is still valid. Will refresh automatically during normal operation."
+        )
 
     # Get account ID
     account_id = entry.data.get(CONF_ACCOUNT_ID)

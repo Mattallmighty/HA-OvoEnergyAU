@@ -61,6 +61,7 @@ class OVOEnergyAUApiClient:
         self._id_token: str | None = None
         self._refresh_token: str | None = None
         self._token_expires_at: datetime | None = None
+        self._token_created_at: datetime | None = None
 
     @property
     def is_authenticated(self) -> bool:
@@ -69,11 +70,28 @@ class OVOEnergyAUApiClient:
 
     @property
     def token_expired(self) -> bool:
-        """Return True if the token has expired."""
+        """Return True if the token has expired (actually expired, no buffer)."""
         if self._token_expires_at is None:
             return True
-        # Add 5 minute buffer
-        return datetime.now() >= (self._token_expires_at - timedelta(minutes=5))
+        return datetime.now() >= self._token_expires_at
+
+    @property
+    def should_refresh(self) -> bool:
+        """Return True if the token should be refreshed (with adaptive buffer)."""
+        if self._token_expires_at is None:
+            return True
+
+        # Calculate token lifetime to use adaptive buffer
+        # Use 20% of token lifetime or 2 minutes, whichever is smaller
+        now = datetime.now()
+        if hasattr(self, '_token_created_at') and self._token_created_at:
+            token_lifetime = (self._token_expires_at - self._token_created_at).total_seconds()
+            buffer_seconds = min(token_lifetime * 0.2, 120)  # 20% or 2 min max
+        else:
+            # Fallback to 1 minute buffer if we don't know when token was created
+            buffer_seconds = 60
+
+        return now >= (self._token_expires_at - timedelta(seconds=buffer_seconds))
 
     def set_tokens(
         self,
@@ -86,9 +104,10 @@ class OVOEnergyAUApiClient:
         self._access_token = access_token
         self._id_token = id_token
         self._refresh_token = refresh_token
+        self._token_created_at = datetime.now()
 
         if expires_in:
-            self._token_expires_at = datetime.now() + timedelta(seconds=expires_in)
+            self._token_expires_at = self._token_created_at + timedelta(seconds=expires_in)
         else:
             # Try to decode the JWT to get expiration
             try:
@@ -101,12 +120,17 @@ class OVOEnergyAUApiClient:
                     self._token_expires_at = datetime.fromtimestamp(exp_timestamp)
                 else:
                     # Default to 1 hour
-                    self._token_expires_at = datetime.now() + timedelta(hours=1)
+                    self._token_expires_at = self._token_created_at + timedelta(hours=1)
             except Exception:
                 # Default to 1 hour
-                self._token_expires_at = datetime.now() + timedelta(hours=1)
+                self._token_expires_at = self._token_created_at + timedelta(hours=1)
 
-        _LOGGER.debug("Tokens set, expires at: %s", self._token_expires_at)
+        token_lifetime = (self._token_expires_at - self._token_created_at).total_seconds()
+        _LOGGER.debug(
+            "Tokens set, expires at: %s (lifetime: %.0f seconds)",
+            self._token_expires_at,
+            token_lifetime
+        )
 
     async def exchange_code_for_tokens(
         self,
@@ -346,8 +370,9 @@ class OVOEnergyAUApiClient:
         if not self._access_token:
             raise OVOEnergyAUApiClientAuthenticationError("Not authenticated")
 
-        if self.token_expired and self._refresh_token:
-            _LOGGER.debug("Token expired, refreshing...")
+        # Use should_refresh which includes 5-minute buffer for proactive refresh
+        if self.should_refresh and self._refresh_token:
+            _LOGGER.debug("Token expiring soon, refreshing...")
             await self.refresh_tokens()
             _LOGGER.debug("Token refreshed successfully")
 
