@@ -386,6 +386,20 @@ class OVOEnergyAUApiClient:
                 headers=headers,
             ) as response:
                 response.raise_for_status()
+
+                # Check content type before trying to parse JSON
+                content_type = response.headers.get('Content-Type', '')
+                if 'application/json' not in content_type:
+                    # API returned HTML instead of JSON - likely due to auth redirect
+                    _LOGGER.error(
+                        "API returned HTML instead of JSON (Content-Type: %s). "
+                        "This usually indicates expired or invalid tokens.",
+                        content_type
+                    )
+                    raise OVOEnergyAUApiClientAuthenticationError(
+                        "Token expired or invalid - please re-authenticate"
+                    )
+
                 data = await response.json()
 
                 if "errors" in data:
@@ -396,6 +410,9 @@ class OVOEnergyAUApiClient:
                     raise OVOEnergyAUApiClientError("Invalid response from API")
 
                 return data["data"]["GetContactInfo"]
+        except OVOEnergyAUApiClientAuthenticationError:
+            # Re-raise authentication errors without wrapping
+            raise
         except aiohttp.ClientResponseError as err:
             if err.status == 401:
                 raise OVOEnergyAUApiClientAuthenticationError(
@@ -403,6 +420,11 @@ class OVOEnergyAUApiClient:
                 ) from err
             raise OVOEnergyAUApiClientCommunicationError(
                 f"Error communicating with API: {err}"
+            ) from err
+        except aiohttp.ContentTypeError as err:
+            # This is the exact error Home Assistant was getting
+            raise OVOEnergyAUApiClientAuthenticationError(
+                "Token expired or invalid - API returned HTML instead of JSON"
             ) from err
         except aiohttp.ClientError as err:
             raise OVOEnergyAUApiClientCommunicationError(
@@ -459,6 +481,19 @@ class OVOEnergyAUApiClient:
                 headers=headers,
             ) as response:
                 response.raise_for_status()
+
+                # Check content type before trying to parse JSON
+                content_type = response.headers.get('Content-Type', '')
+                if 'application/json' not in content_type:
+                    _LOGGER.error(
+                        "API returned HTML instead of JSON (Content-Type: %s). "
+                        "This usually indicates expired or invalid tokens.",
+                        content_type
+                    )
+                    raise OVOEnergyAUApiClientAuthenticationError(
+                        "Token expired or invalid - please re-authenticate"
+                    )
+
                 data = await response.json()
 
                 if "errors" in data:
@@ -469,6 +504,8 @@ class OVOEnergyAUApiClient:
                     raise OVOEnergyAUApiClientError("Invalid response from API")
 
                 return data["data"]["GetIntervalData"]
+        except OVOEnergyAUApiClientAuthenticationError:
+            raise
         except aiohttp.ClientResponseError as err:
             if err.status == 401:
                 raise OVOEnergyAUApiClientAuthenticationError(
@@ -476,6 +513,10 @@ class OVOEnergyAUApiClient:
                 ) from err
             raise OVOEnergyAUApiClientCommunicationError(
                 f"Error communicating with API: {err}"
+            ) from err
+        except aiohttp.ContentTypeError as err:
+            raise OVOEnergyAUApiClientAuthenticationError(
+                "Token expired or invalid - API returned HTML instead of JSON"
             ) from err
         except aiohttp.ClientError as err:
             raise OVOEnergyAUApiClientCommunicationError(
@@ -527,6 +568,19 @@ class OVOEnergyAUApiClient:
                 headers=headers,
             ) as response:
                 response.raise_for_status()
+
+                # Check content type before trying to parse JSON
+                content_type = response.headers.get('Content-Type', '')
+                if 'application/json' not in content_type:
+                    _LOGGER.error(
+                        "API returned HTML instead of JSON (Content-Type: %s). "
+                        "This usually indicates expired or invalid tokens.",
+                        content_type
+                    )
+                    raise OVOEnergyAUApiClientAuthenticationError(
+                        "Token expired or invalid - please re-authenticate"
+                    )
+
                 data = await response.json()
 
                 if "errors" in data:
@@ -537,6 +591,8 @@ class OVOEnergyAUApiClient:
                     raise OVOEnergyAUApiClientError("Invalid response from API")
 
                 return data["data"]["GetHourlyData"]
+        except OVOEnergyAUApiClientAuthenticationError:
+            raise
         except aiohttp.ClientResponseError as err:
             if err.status == 401:
                 raise OVOEnergyAUApiClientAuthenticationError(
@@ -544,6 +600,10 @@ class OVOEnergyAUApiClient:
                 ) from err
             raise OVOEnergyAUApiClientCommunicationError(
                 f"Error communicating with API: {err}"
+            ) from err
+        except aiohttp.ContentTypeError as err:
+            raise OVOEnergyAUApiClientAuthenticationError(
+                "Token expired or invalid - API returned HTML instead of JSON"
             ) from err
         except aiohttp.ClientError as err:
             raise OVOEnergyAUApiClientCommunicationError(

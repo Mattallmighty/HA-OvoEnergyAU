@@ -40,7 +40,39 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         client.set_tokens(
             access_token=entry.data[CONF_ACCESS_TOKEN],
             id_token=entry.data["id_token"],
+            refresh_token=entry.data.get("refresh_token"),
         )
+
+    # Proactively refresh token if expired before first API call
+    # This prevents the "HTML instead of JSON" error during setup
+    if client.token_expired and client._refresh_token:
+        _LOGGER.info("Token expired, refreshing before setup")
+        try:
+            new_token_data = await client.refresh_tokens()
+
+            # Update the config entry with new tokens
+            new_data = dict(entry.data)
+            if "token" in new_data:
+                # OAuth2 flow
+                new_data["token"]["access_token"] = new_token_data["access_token"]
+                new_data["token"]["id_token"] = new_token_data["id_token"]
+                if "refresh_token" in new_token_data:
+                    new_data["token"]["refresh_token"] = new_token_data["refresh_token"]
+                if "expires_in" in new_token_data:
+                    new_data["token"]["expires_in"] = new_token_data["expires_in"]
+            else:
+                # Manual token entry
+                new_data[CONF_ACCESS_TOKEN] = new_token_data["access_token"]
+                new_data["id_token"] = new_token_data["id_token"]
+                if "refresh_token" in new_token_data:
+                    new_data["refresh_token"] = new_token_data["refresh_token"]
+
+            hass.config_entries.async_update_entry(entry, data=new_data)
+            _LOGGER.info("Token refresh successful, config entry updated")
+        except Exception as err:
+            _LOGGER.error("Failed to refresh expired token during setup: %s", err)
+            _LOGGER.error("Please re-add the integration with fresh credentials")
+            raise
 
     # Get account ID
     account_id = entry.data.get(CONF_ACCOUNT_ID)
