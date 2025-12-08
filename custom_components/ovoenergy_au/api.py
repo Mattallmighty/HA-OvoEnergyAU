@@ -169,6 +169,15 @@ class OVOEnergyAUApiClient:
                 )
 
                 return token_data
+        except aiohttp.ClientResponseError as err:
+            # 403 Forbidden means refresh token is expired or invalid
+            if err.status == 403:
+                raise OVOEnergyAUApiClientAuthenticationError(
+                    "Refresh token expired or invalid - please re-authenticate"
+                ) from err
+            raise OVOEnergyAUApiClientCommunicationError(
+                "Error refreshing tokens"
+            ) from err
         except aiohttp.ClientError as err:
             raise OVOEnergyAUApiClientCommunicationError(
                 "Error refreshing tokens"

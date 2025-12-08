@@ -9,7 +9,7 @@ from homeassistant.const import CONF_ACCESS_TOKEN, Platform
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .api import OVOEnergyAUApiClient
+from .api import OVOEnergyAUApiClient, OVOEnergyAUApiClientAuthenticationError
 from .const import CONF_ACCOUNT_ID, DOMAIN
 from .coordinator import OVOEnergyAUDataUpdateCoordinator
 
@@ -69,9 +69,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
             hass.config_entries.async_update_entry(entry, data=new_data)
             _LOGGER.info("Token refresh successful, config entry updated")
+        except OVOEnergyAUApiClientAuthenticationError as err:
+            # Refresh token is expired or invalid - user needs to re-authenticate
+            _LOGGER.error(
+                "Authentication tokens have expired and cannot be refreshed. "
+                "Please delete and re-add the integration with your username and password."
+            )
+            raise
         except Exception as err:
             _LOGGER.error("Failed to refresh expired token during setup: %s", err)
-            _LOGGER.error("Please re-add the integration with fresh credentials")
             raise
 
     # Get account ID
