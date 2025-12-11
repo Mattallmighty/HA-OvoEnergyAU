@@ -22,6 +22,13 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import DOMAIN
 from .coordinator import OVOEnergyAUDataUpdateCoordinator
 
+from homeassistant.components.recorder.models import StatisticData, StatisticMetaData
+from homeassistant.components.recorder.statistics import (
+    async_import_statistics,
+    get_last_statistics,
+)
+from homeassistant.util import dt as dt_util
+
 _LOGGER = logging.getLogger(__name__)
 
 
@@ -217,7 +224,7 @@ SENSOR_DESCRIPTIONS: tuple[OVOEnergyAUSensorEntityDescription, ...] = (
         icon="mdi:currency-usd",
         value_fn=lambda data: data.get("yearly", {}).get("return_to_grid_charge"),
     ),
-    # Hourly sensors
+    # Hourly sensors (for Energy Dashboard statistics)
     OVOEnergyAUSensorEntityDescription(
         key="hourly_solar_consumption",
         name="Hourly Solar Consumption",
@@ -228,7 +235,6 @@ SENSOR_DESCRIPTIONS: tuple[OVOEnergyAUSensorEntityDescription, ...] = (
         value_fn=lambda data: data.get("hourly", {}).get("solar_total"),
         attr_fn=lambda data: {
             "entries": data.get("hourly", {}).get("solar_entries", []),
-            "entry_count": len(data.get("hourly", {}).get("solar_entries", [])),
         },
     ),
     OVOEnergyAUSensorEntityDescription(
@@ -241,7 +247,6 @@ SENSOR_DESCRIPTIONS: tuple[OVOEnergyAUSensorEntityDescription, ...] = (
         value_fn=lambda data: data.get("hourly", {}).get("grid_total"),
         attr_fn=lambda data: {
             "entries": data.get("hourly", {}).get("grid_entries", []),
-            "entry_count": len(data.get("hourly", {}).get("grid_entries", [])),
         },
     ),
     OVOEnergyAUSensorEntityDescription(
@@ -254,7 +259,6 @@ SENSOR_DESCRIPTIONS: tuple[OVOEnergyAUSensorEntityDescription, ...] = (
         value_fn=lambda data: data.get("hourly", {}).get("return_to_grid_total"),
         attr_fn=lambda data: {
             "entries": data.get("hourly", {}).get("return_to_grid_entries", []),
-            "entry_count": len(data.get("hourly", {}).get("return_to_grid_entries", [])),
         },
     ),
 )
@@ -311,3 +315,99 @@ class OVOEnergyAUSensor(CoordinatorEntity[OVOEnergyAUDataUpdateCoordinator], Sen
         if self.entity_description.attr_fn:
             return self.entity_description.attr_fn(self.coordinator.data)
         return {}
+
+    async def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        # Standard update first
+        super()._handle_coordinator_update()
+
+        # If this is an hourly sensor, attempt to import statistics
+        if self.entity_description.key.startswith("hourly_"):
+            await self._async_import_statistics()
+
+    async def _async_import_statistics(self) -> None:
+        """Import hourly statistics for the Energy Dashboard."""
+        if not self.coordinator.data.get("hourly"):
+            return
+
+        # Map entity keys to data keys in coordinator data
+        data_key_map = {
+            "hourly_solar_consumption": "solar_entries",
+            "hourly_grid_consumption": "grid_entries",
+            "hourly_return_to_grid": "return_to_grid_entries",
+        }
+
+        data_key = data_key_map.get(self.entity_description.key)
+        if not data_key:
+            return
+
+        entries = self.coordinator.data["hourly"].get(data_key, [])
+        if not entries:
+            return
+
+        # Sort entries by time just in case
+        entries.sort(key=lambda x: x["period_from"])
+
+        statistic_id = self.entity_id
+        
+        # Get the last statistic to determine the running total (sum)
+        last_stats = await self.hass.async_add_executor_job(
+            get_last_statistics, self.hass, 1, statistic_id, True, {"sum"}
+        )
+        
+        last_sum = 0.0
+        if last_stats and statistic_id in last_stats and last_stats[statistic_id]:
+            last_sum = last_stats[statistic_id][0].get("sum") or 0.0
+
+        statistics = []
+        current_sum = last_sum
+
+        for entry in entries:
+            try:
+                # Parse timestamp (API format example: 2023-10-27T00:00:00)
+                # Ensure it's timezone aware (assume local AU time or UTC? usually API gives local)
+                # Note: OVO API typically returns local time. We need to handle this carefully.
+                # However, for simplicity, we'll parse as is. If simplejson/string, use fromisoformat.
+                
+                start_time_str = entry["period_from"]
+                # Assuming ISO format. If no timezone, we might need to add one.
+                # dt_util.parse_datetime handles most cases.
+                start_time = dt_util.parse_datetime(start_time_str)
+                
+                if start_time is None:
+                    continue
+
+                # Ensure timezone awareness (default to configured HA timezone if missing)
+                if start_time.tzinfo is None:
+                    start_time = start_time.replace(tzinfo=dt_util.get_default_time_zone())
+
+                consumption = float(entry.get("consumption", 0.0))
+                current_sum += consumption
+
+                statistics.append(
+                    StatisticData(
+                        start=start_time,
+                        state=consumption,
+                        sum=current_sum,
+                    )
+                )
+            except (ValueError, TypeError) as err:
+                _LOGGER.error("Error processing statistic entry: %s", err)
+                continue
+
+        if statistics:
+            _LOGGER.debug(
+                "Importing %d statistics for %s (starting sum: %.2f)", 
+                len(statistics), statistic_id, last_sum
+            )
+            
+            metadata = StatisticMetaData(
+                has_mean=False,
+                has_sum=True,
+                name=self.entity_description.name,
+                source=DOMAIN,
+                statistic_id=statistic_id,
+                unit_of_measurement=self.entity_description.native_unit_of_measurement,
+            )
+
+            async_import_statistics(self.hass, metadata, statistics)

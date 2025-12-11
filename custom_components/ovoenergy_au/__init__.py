@@ -5,8 +5,9 @@ from __future__ import annotations
 import logging
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_ACCESS_TOKEN, Platform
+from homeassistant.const import CONF_ACCESS_TOKEN, CONF_PASSWORD, CONF_USERNAME, Platform
 from homeassistant.core import HomeAssistant, ServiceCall
+from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import OVOEnergyAUApiClient, OVOEnergyAUApiClientAuthenticationError
@@ -70,12 +71,50 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             hass.config_entries.async_update_entry(entry, data=new_data)
             _LOGGER.info("Token refresh successful, config entry updated")
         except OVOEnergyAUApiClientAuthenticationError as err:
-            # Refresh token is expired or invalid - user needs to re-authenticate
-            _LOGGER.error(
-                "Authentication tokens have expired and cannot be refreshed. "
-                "Please delete and re-add the integration with your username and password."
-            )
-            raise
+            # Refresh token is expired or invalid.
+            # Try to recover using stored credentials if available.
+            username = entry.data.get(CONF_USERNAME)
+            password = entry.data.get(CONF_PASSWORD)
+
+            if username and password:
+                _LOGGER.warning(
+                    "Token refresh failed. Attempting automatic re-authentication using stored credentials for %s",
+                    username
+                )
+                try:
+                    # Authenticate with username/password
+                    token_data = await client.authenticate_with_password(username, password)
+
+                    # Update the config entry with new tokens
+                    new_data = dict(entry.data)
+
+                    # Handle both OAuth structure and flat structure
+                    if "token" in new_data:
+                        new_data["token"]["access_token"] = token_data["access_token"]
+                        new_data["token"]["id_token"] = token_data["id_token"]
+                        if "refresh_token" in token_data:
+                            new_data["token"]["refresh_token"] = token_data["refresh_token"]
+                        if "expires_in" in token_data:
+                            new_data["token"]["expires_in"] = token_data["expires_in"]
+                    else:
+                        new_data[CONF_ACCESS_TOKEN] = token_data["access_token"]
+                        new_data["id_token"] = token_data["id_token"]
+                        if "refresh_token" in token_data:
+                            new_data["refresh_token"] = token_data["refresh_token"]
+
+                    hass.config_entries.async_update_entry(entry, data=new_data)
+                    _LOGGER.info("Automatic re-authentication successful")
+
+                except Exception as reauth_err:
+                    _LOGGER.error("Automatic re-authentication failed: %s", reauth_err)
+                    # If auto-recovery fails, THEN trigger the manual re-auth flow
+                    raise ConfigEntryAuthFailed(reauth_err) from reauth_err
+            else:
+                # Refresh token is expired or invalid - trigger re-authentication flow
+                _LOGGER.warning(
+                    "Authentication tokens have expired and no credentials stored. Triggering re-authentication flow."
+                )
+                raise ConfigEntryAuthFailed(err) from err
         except Exception as err:
             _LOGGER.error("Failed to refresh expired token during setup: %s", err)
             raise

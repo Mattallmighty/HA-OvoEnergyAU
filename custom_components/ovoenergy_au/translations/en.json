@@ -12,6 +12,14 @@
           "username": "Email Address",
           "password": "Password"
         }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate OVO Energy Australia",
+        "description": "Your session has expired. Please re-authenticate with your OVO Energy Australia credentials.",
+        "data": {
+          "username": "Email Address",
+          "password": "Password"
+        }
       }
     },
     "error": {
@@ -24,7 +32,8 @@
       "already_configured": "This account is already configured.",
       "auth_failed": "Authentication failed. Please check your credentials.",
       "cannot_connect": "Cannot connect to OVO Energy API.",
-      "unknown": "Unknown error occurred."
+      "unknown": "Unknown error occurred.",
+      "reauth_successful": "Re-authentication successful."
     }
   }
 }

@@ -156,6 +156,8 @@ class OVOEnergyAUFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                             "id_token": token_data["id_token"],
                             "refresh_token": token_data.get("refresh_token"),
                             CONF_ACCOUNT_ID: account_id,
+                            CONF_USERNAME: user_input[CONF_USERNAME],
+                            CONF_PASSWORD: user_input[CONF_PASSWORD],
                         },
                     )
                 errors["base"] = ERROR_CANNOT_CONNECT
@@ -182,6 +184,80 @@ class OVOEnergyAUFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             description_placeholders={
                 "docs_url": "https://github.com/Mattallmighty/HA-OvoEnergyAU",
             },
+        )
+
+    async def async_step_reauth(self, entry_data: dict[str, Any]) -> FlowResult:
+        """Handle re-authentication."""
+        self.entry = self.hass.config_entries.async_get_entry(self.context["entry_id"])
+        return await self.async_step_reauth_confirm()
+
+    async def async_step_reauth_confirm(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Confirm re-authentication."""
+        errors = {}
+
+        if user_input is not None:
+            try:
+                session = async_get_clientsession(self.hass)
+                client = OVOEnergyAUApiClient(session)
+
+                # Authenticate with username/password
+                username = user_input[CONF_USERNAME]
+                password = user_input[CONF_PASSWORD]
+
+                token_data = await client.authenticate_with_password(username, password)
+
+                # Update existing entry
+                new_data = dict(self.entry.data)
+                
+                # Update tokens
+                if "token" in new_data:
+                    # If previously using OAuth2 structure
+                    new_data["token"]["access_token"] = token_data["access_token"]
+                    new_data["token"]["id_token"] = token_data["id_token"]
+                    new_data["token"]["refresh_token"] = token_data.get("refresh_token")
+                    new_data["token"]["expires_in"] = token_data.get("expires_in")
+                else:
+                    # Manual/Flat structure
+                    new_data[CONF_ACCESS_TOKEN] = token_data["access_token"]
+                    new_data["id_token"] = token_data["id_token"]
+                    new_data["refresh_token"] = token_data.get("refresh_token")
+                
+                # Ensure username is saved if it wasn't before
+                new_data[CONF_USERNAME] = username
+                new_data[CONF_PASSWORD] = password
+
+                self.hass.config_entries.async_update_entry(
+                    self.entry,
+                    data=new_data
+                )
+
+                self.hass.config_entries.async_reload(self.entry.entry_id)
+                return self.async_abort(reason="reauth_successful")
+
+            except OVOEnergyAUApiClientAuthenticationError:
+                errors["base"] = ERROR_AUTH_FAILED
+            except Exception as err:
+                _LOGGER.exception("Reauthentication error: %s", err)
+                errors["base"] = ERROR_UNKNOWN
+
+        # Default username to existing one if available
+        default_username = (
+            self.entry.data.get(CONF_USERNAME) 
+            if hasattr(self, "entry") and self.entry and CONF_USERNAME in self.entry.data 
+            else ""
+        )
+
+        return self.async_show_form(
+            step_id="reauth_confirm",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(CONF_USERNAME, default=default_username): str,
+                    vol.Required(CONF_PASSWORD): str,
+                }
+            ),
+            errors=errors,
         )
 
 
