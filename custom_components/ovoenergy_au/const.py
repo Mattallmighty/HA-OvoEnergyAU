@@ -23,9 +23,9 @@ OAUTH_CONNECTION = "prod-myovo-auth"  # Auth0 database connection name
 OAUTH_REDIRECT_URI = f"{API_BASE_URL}?login=oea"
 
 # Update intervals
-# Poll daily at 2am since data is only available for yesterday
+# Poll daily at 6am since data is only available for yesterday
 UPDATE_INTERVAL = timedelta(hours=24)
-UPDATE_HOUR = 2  # 2am daily
+UPDATE_HOUR = 6  # 6am daily
 FAST_UPDATE_INTERVAL = timedelta(minutes=5)  # For manual refresh
 
 # Hourly data settings

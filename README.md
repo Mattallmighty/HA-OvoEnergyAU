@@ -22,12 +22,12 @@ A Home Assistant custom integration for monitoring your OVO Energy Australia acc
   - Return to grid (CREDIT charges - solar export)
 - Monitor energy charges for all consumption types
 - **Hourly data support**: Automatically fetches hourly consumption data for detailed graphing
-  - Fetches last 7 days of hourly data during the 2am daily update
+  - Fetches last 7 days of hourly data during the 6am daily update
   - Hourly data available for solar, grid consumption, and return to grid
   - Perfect for Home Assistant energy dashboard graphs
 - Automatic token refresh (no need to re-enter credentials)
 - Supports Home Assistant energy dashboard
-- **Smart polling**: Updates automatically every day at 2:00 AM (since OVO data is only available for yesterday)
+- **Smart polling**: Updates automatically every day at 6:00 AM (since OVO data is only available for yesterday)
 - **Manual refresh**: Service available to manually update data on demand
 
 ## Installation
