@@ -234,7 +234,8 @@ SENSOR_DESCRIPTIONS: tuple[OVOEnergyAUSensorEntityDescription, ...] = (
         icon="mdi:solar-power",
         value_fn=lambda data: data.get("hourly", {}).get("solar_total"),
         attr_fn=lambda data: {
-            "entries": data.get("hourly", {}).get("solar_entries", []),
+            "entries": data.get("hourly", {}).get("solar_entries", [])[-24:],
+            "entry_count": len(data.get("hourly", {}).get("solar_entries", [])),
         },
     ),
     OVOEnergyAUSensorEntityDescription(
@@ -246,7 +247,8 @@ SENSOR_DESCRIPTIONS: tuple[OVOEnergyAUSensorEntityDescription, ...] = (
         icon="mdi:transmission-tower",
         value_fn=lambda data: data.get("hourly", {}).get("grid_total"),
         attr_fn=lambda data: {
-            "entries": data.get("hourly", {}).get("grid_entries", []),
+            "entries": data.get("hourly", {}).get("grid_entries", [])[-24:],
+            "entry_count": len(data.get("hourly", {}).get("grid_entries", [])),
         },
     ),
     OVOEnergyAUSensorEntityDescription(
@@ -258,7 +260,8 @@ SENSOR_DESCRIPTIONS: tuple[OVOEnergyAUSensorEntityDescription, ...] = (
         icon="mdi:transmission-tower-export",
         value_fn=lambda data: data.get("hourly", {}).get("return_to_grid_total"),
         attr_fn=lambda data: {
-            "entries": data.get("hourly", {}).get("return_to_grid_entries", []),
+            "entries": data.get("hourly", {}).get("return_to_grid_entries", [])[-24:],
+            "entry_count": len(data.get("hourly", {}).get("return_to_grid_entries", [])),
         },
     ),
 )
@@ -412,7 +415,7 @@ class OVOEnergyAUSensor(CoordinatorEntity[OVOEnergyAUDataUpdateCoordinator], Sen
                 has_mean=False,
                 has_sum=True,
                 name=self.entity_description.name,
-                source=DOMAIN,
+                source="recorder",  # Must be 'recorder' to import stats for this entity
                 statistic_id=statistic_id,
                 unit_of_measurement=self.entity_description.native_unit_of_measurement,
             )
