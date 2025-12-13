@@ -1,7 +1,11 @@
 # OVO Energy Australia - Home Assistant Integration
 
+<p align="center">
+  <img src="images/icon.png" alt="Logo" width="128" height="128">
+</p>
+
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
-![Version](https://img.shields.io/badge/version-1.3.0-green.svg)
+![Version](https://img.shields.io/badge/version-1.3.8-green.svg)
 
 A Home Assistant custom integration for monitoring your OVO Energy Australia account energy usage and costs.
 
@@ -9,6 +13,7 @@ A Home Assistant custom integration for monitoring your OVO Energy Australia acc
 
 - **Easy setup**: Simply enter your OVO Energy email and password
 - **Automatic authentication**: Handles OAuth2 token management automatically behind the scenes
+- **Auto-Recovery**: Automatically logs in again if tokens expire using stored credentials
 - Track daily, monthly, and yearly solar consumption
 - Track daily, monthly, and yearly grid consumption (power pulled from grid)
 - Track daily, monthly, and yearly return to grid (power exported back to grid)
@@ -64,8 +69,8 @@ That's it! The integration will:
 
 **Security Notes:**
 - Your password is transmitted securely using HTTPS
-- Your password is NOT stored - only authentication tokens are saved
-- Tokens are automatically refreshed, so you never need to re-enter your password
+- Your password is stored securely in Home Assistant's configuration entry to enable automatic re-authentication if tokens expire
+- Tokens are automatically refreshed, but if they are revoked, the integration will use your stored password to get new ones automatically
 
 ## Sensors
 

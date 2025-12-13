@@ -361,6 +361,7 @@ class OVOEnergyAUSensor(CoordinatorEntity[OVOEnergyAUDataUpdateCoordinator], Sen
         statistic_id = self.entity_id
         
         # Get the last statistic to determine the running total (sum)
+        # Use async_add_executor_job to avoid blocking the event loop (database I/O)
         last_stats = await self.hass.async_add_executor_job(
             get_last_statistics, self.hass, 1, statistic_id, True, {"sum"}
         )
@@ -420,4 +421,4 @@ class OVOEnergyAUSensor(CoordinatorEntity[OVOEnergyAUDataUpdateCoordinator], Sen
                 unit_of_measurement=self.entity_description.native_unit_of_measurement,
             )
 
-            async_import_statistics(self.hass, metadata, statistics)
+            await async_import_statistics(self.hass, metadata, statistics)
