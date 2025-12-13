@@ -333,6 +333,7 @@ class OVOEnergyAUSensor(CoordinatorEntity[OVOEnergyAUDataUpdateCoordinator], Sen
     async def _async_import_statistics(self) -> None:
         """Import hourly statistics for the Energy Dashboard."""
         if not self.coordinator.data.get("hourly"):
+            _LOGGER.debug("No hourly data available in coordinator")
             return
 
         # Map entity keys to data keys in coordinator data
@@ -348,6 +349,7 @@ class OVOEnergyAUSensor(CoordinatorEntity[OVOEnergyAUDataUpdateCoordinator], Sen
 
         entries = self.coordinator.data["hourly"].get(data_key, [])
         if not entries:
+            _LOGGER.debug("No entries found for %s (key: %s)", self.entity_id, data_key)
             return
 
         # Sort entries by time just in case

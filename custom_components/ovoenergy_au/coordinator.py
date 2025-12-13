@@ -179,6 +179,13 @@ class OVOEnergyAUDataUpdateCoordinator(DataUpdateCoordinator):
             "grid_total": 0,
             "return_to_grid_total": 0,
         }
+        
+        raw_solar_count = len(data.get("solar", []) or [])
+        raw_export_count = len(data.get("export", []) or [])
+        _LOGGER.debug(
+            "Processing hourly data: %d raw solar entries, %d raw export entries", 
+            raw_solar_count, raw_export_count
+        )
 
         # Process solar data - keep all entries
         if "solar" in data and data["solar"]:
@@ -218,5 +225,12 @@ class OVOEnergyAUDataUpdateCoordinator(DataUpdateCoordinator):
                 else:
                     processed["grid_entries"].append(entry_data)
                     processed["grid_total"] += consumption
+        
+        _LOGGER.debug(
+            "Processed hourly results: %d grid entries (%.2f kWh), %d return entries (%.2f kWh), %d solar entries (%.2f kWh)",
+            len(processed["grid_entries"]), processed["grid_total"],
+            len(processed["return_to_grid_entries"]), processed["return_to_grid_total"],
+            len(processed["solar_entries"]), processed["solar_total"]
+        )
 
         return processed
