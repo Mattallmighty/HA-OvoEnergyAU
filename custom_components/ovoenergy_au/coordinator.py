@@ -80,15 +80,16 @@ class OVOEnergyAUDataUpdateCoordinator(DataUpdateCoordinator):
             interval_data = await self.client.get_interval_data(self.account_id)
             processed_data = self._process_data(interval_data)
 
-            # Fetch hourly data for yesterday
-            # WORKAROUND: The OVO API returns 0 results if start_date == end_date
-            # We must query a wider range (e.g. yesterday-1 to yesterday+1) to get data
+            # Fetch hourly data for the last 7 days
+            # This ensures we:
+            # 1. Work around the API issue where single-day queries return 0 results
+            # 2. Backfill recent history if the integration was offline
+            # 3. Correctly update any partial data from previous days
             now = dt_util.now()
-            yesterday = now - timedelta(days=1)
-            yesterday_str = yesterday.strftime("%Y-%m-%d")
             
-            # Query range: Day before yesterday -> Today
-            query_start = (yesterday - timedelta(days=1)).strftime("%Y-%m-%d")
+            # Query range: Last 7 days -> Today
+            start_date = now - timedelta(days=7)
+            query_start = start_date.strftime("%Y-%m-%d")
             query_end = now.strftime("%Y-%m-%d")
 
             try:
@@ -98,22 +99,21 @@ class OVOEnergyAUDataUpdateCoordinator(DataUpdateCoordinator):
                     query_end,
                 )
                 
-                # Check if we got data for yesterday
-                # API sometimes returns partial data or empty arrays for yesterday
+                # Check if we got data
                 has_solar = len(hourly_data.get("solar", []) or []) > 0
                 has_export = len(hourly_data.get("export", []) or []) > 0
                 
                 if not has_solar and not has_export:
                     _LOGGER.info("No hourly data found in range %s to %s", query_start, query_end)
-                    # If strictly empty, maybe try an even wider range in future?
-                    # For now, we trust the wider window worked better than single day.
                 else:
-                    _LOGGER.debug("Successfully fetched hourly data (range query)")
+                    _LOGGER.debug(
+                        "Successfully fetched hourly data (range query: %s to %s)", 
+                        query_start, query_end
+                    )
                 
-                # Process the data (filtering happens inside process method if needed, 
-                # but currently we just take everything which is fine as HA handles duplicates)
-                # Actually, strictly better to filter for yesterday only to be clean
-                processed_data["hourly"] = self._process_hourly_data(hourly_data, target_date=yesterday_str)
+                # Process all data returned in the window
+                # We do NOT filter by target_date anymore, allowing backfill of all 7 days
+                processed_data["hourly"] = self._process_hourly_data(hourly_data)
             except Exception as err:
                 _LOGGER.warning("Failed to fetch hourly data: %s", err)
                 processed_data["hourly"] = {}
@@ -185,12 +185,11 @@ class OVOEnergyAUDataUpdateCoordinator(DataUpdateCoordinator):
 
         return processed
 
-    def _process_hourly_data(self, data: dict[str, Any], target_date: str | None = None) -> dict[str, Any]:
+    def _process_hourly_data(self, data: dict[str, Any]) -> dict[str, Any]:
         """Process hourly data.
 
-        Args:
-            data: Raw data from API
-            target_date: Optional YYYY-MM-DD string to filter entries by
+        Note: Unlike interval data, we keep ALL hourly entries for graphing.
+        This allows Home Assistant to display hourly consumption graphs.
         """
         processed = {
             "solar_entries": [],
@@ -204,25 +203,14 @@ class OVOEnergyAUDataUpdateCoordinator(DataUpdateCoordinator):
         raw_solar_count = len(data.get("solar", []) or [])
         raw_export_count = len(data.get("export", []) or [])
         _LOGGER.debug(
-            "Processing hourly data: %d raw solar entries, %d raw export entries (Target Date: %s)", 
-            raw_solar_count, raw_export_count, target_date
+            "Processing hourly data: %d raw solar entries, %d raw export entries", 
+            raw_solar_count, raw_export_count
         )
-
-        # Helper to check if entry matches target date
-        def is_target_date(entry):
-            if not target_date:
-                return True
-            period_from = entry.get("periodFrom", "")
-            # Assuming format "YYYY-MM-DDTHH:MM:SS..."
-            return period_from.startswith(target_date)
 
         # Process solar data - keep all entries
         if "solar" in data and data["solar"]:
             solar_entries = data["solar"]
             for entry in solar_entries:
-                if not is_target_date(entry):
-                    continue
-
                 processed["solar_entries"].append({
                     "period_from": entry.get("periodFrom"),
                     "period_to": entry.get("periodTo"),
@@ -236,9 +224,6 @@ class OVOEnergyAUDataUpdateCoordinator(DataUpdateCoordinator):
         if "export" in data and data["export"]:
             export_entries = data["export"]
             for entry in export_entries:
-                if not is_target_date(entry):
-                    continue
-
                 consumption = entry.get("consumption", 0)
                 # Handle missing charge object (can be null in API response)
                 charge_data = entry.get("charge") or {}
