@@ -92,8 +92,28 @@ class OVOEnergyAUDataUpdateCoordinator(DataUpdateCoordinator):
                     yesterday_date,
                     yesterday_date,
                 )
+                
+                # Check if we got data for yesterday
+                # API sometimes returns partial data or empty arrays for yesterday
+                # If so, try the day before yesterday to ensure we show SOMETHING on the dashboard
+                has_solar = len(hourly_data.get("solar", []) or []) > 0
+                has_export = len(hourly_data.get("export", []) or []) > 0
+                
+                if not has_solar and not has_export:
+                    _LOGGER.info("No hourly data for yesterday (%s), trying day before", yesterday_date)
+                    day_before = now - timedelta(days=2)
+                    day_before_date = day_before.strftime("%Y-%m-%d")
+                    
+                    hourly_data = await self.client.get_hourly_data(
+                        self.account_id,
+                        day_before_date,
+                        day_before_date,
+                    )
+                    _LOGGER.info("Fetched fallback hourly data for: %s", day_before_date)
+                else:
+                    _LOGGER.debug("Successfully fetched hourly data for yesterday: %s", yesterday_date)
+                
                 processed_data["hourly"] = self._process_hourly_data(hourly_data)
-                _LOGGER.debug("Successfully fetched hourly data for yesterday: %s", yesterday_date)
             except Exception as err:
                 _LOGGER.warning("Failed to fetch hourly data: %s", err)
                 processed_data["hourly"] = {}
@@ -205,9 +225,10 @@ class OVOEnergyAUDataUpdateCoordinator(DataUpdateCoordinator):
             export_entries = data["export"]
             for entry in export_entries:
                 consumption = entry.get("consumption", 0)
+                # Handle missing charge object (can be null in API response)
                 charge_data = entry.get("charge") or {}
                 charge_value = charge_data.get("value", 0)
-                charge_type = charge_data.get("type", "DEBIT")
+                charge_type = charge_data.get("type", "DEBIT")  # Default to DEBIT if missing
 
                 entry_data = {
                     "period_from": entry.get("periodFrom"),
