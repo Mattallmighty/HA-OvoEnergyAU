@@ -233,7 +233,7 @@ class OVOEnergyAUFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     data=new_data
                 )
 
-                self.hass.config_entries.async_reload(self.entry.entry_id)
+                await self.hass.config_entries.async_reload(self.entry.entry_id)
                 return self.async_abort(reason="reauth_successful")
 
             except OVOEnergyAUApiClientAuthenticationError:

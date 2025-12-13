@@ -316,14 +316,19 @@ class OVOEnergyAUSensor(CoordinatorEntity[OVOEnergyAUDataUpdateCoordinator], Sen
             return self.entity_description.attr_fn(self.coordinator.data)
         return {}
 
-    async def _handle_coordinator_update(self) -> None:
+    def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         # Standard update first
         super()._handle_coordinator_update()
 
         # If this is an hourly sensor, attempt to import statistics
         if self.entity_description.key.startswith("hourly_"):
-            await self._async_import_statistics()
+            self.hass.async_create_task(self._async_import_statistics())
+    
+    @property
+    def available(self) -> bool:
+        """Return if entity is available."""
+        return self.coordinator.last_update_success
 
     async def _async_import_statistics(self) -> None:
         """Import hourly statistics for the Energy Dashboard."""
