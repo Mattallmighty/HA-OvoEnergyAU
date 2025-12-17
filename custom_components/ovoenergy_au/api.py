@@ -54,9 +54,13 @@ class OVOEnergyAUApiClient:
     def __init__(
         self,
         session: aiohttp.ClientSession,
+        username: str | None = None,
+        password: str | None = None,
     ) -> None:
         """Initialize the API client."""
         self._session = session
+        self._username = username
+        self._password = password
         self._access_token: str | None = None
         self._id_token: str | None = None
         self._refresh_token: str | None = None
@@ -368,13 +372,32 @@ class OVOEnergyAUApiClient:
     async def _ensure_authenticated(self) -> None:
         """Ensure the client is authenticated."""
         if not self._access_token:
+            # If we have credentials, try to authenticate
+            if self._username and self._password:
+                _LOGGER.debug("No access token, authenticating with credentials")
+                await self.authenticate_with_password(self._username, self._password)
+                return
             raise OVOEnergyAUApiClientAuthenticationError("Not authenticated")
 
         # Use should_refresh which includes 5-minute buffer for proactive refresh
-        if self.should_refresh and self._refresh_token:
+        if self.should_refresh:
             _LOGGER.debug("Token expiring soon, refreshing...")
-            await self.refresh_tokens()
-            _LOGGER.debug("Token refreshed successfully")
+            
+            # Prefer full re-authentication if we have credentials
+            # This is more reliable than refresh tokens which seem to expire/invalidate after 24h
+            if self._username and self._password:
+                try:
+                    _LOGGER.debug("Performing full re-authentication with password")
+                    await self.authenticate_with_password(self._username, self._password)
+                    _LOGGER.debug("Re-authentication successful")
+                    return
+                except Exception as err:
+                    _LOGGER.warning("Re-authentication failed: %s. Falling back to refresh token.", err)
+            
+            # Fallback to refresh token if no credentials or re-auth failed
+            if self._refresh_token:
+                await self.refresh_tokens()
+                _LOGGER.debug("Token refreshed successfully")
 
     async def get_contact_info(self) -> dict[str, Any]:
         """Get contact information and account details."""

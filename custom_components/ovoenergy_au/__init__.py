@@ -25,7 +25,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     # Create API client
     session = async_get_clientsession(hass)
-    client = OVOEnergyAUApiClient(session)
+    username = entry.data.get(CONF_USERNAME)
+    password = entry.data.get(CONF_PASSWORD)
+    client = OVOEnergyAUApiClient(session, username=username, password=password)
 
     # Set tokens from config entry
     if "token" in entry.data:
