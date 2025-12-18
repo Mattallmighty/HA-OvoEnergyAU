@@ -445,4 +445,4 @@ class OVOEnergyAUSensor(CoordinatorEntity[OVOEnergyAUDataUpdateCoordinator], Sen
                 unit_of_measurement=self.entity_description.native_unit_of_measurement,
             )
 
-            await async_import_statistics(self.hass, metadata, statistics)
+            async_import_statistics(self.hass, metadata, statistics)
