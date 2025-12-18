@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from datetime import timedelta
 import logging
 from typing import Any
 
@@ -360,15 +361,44 @@ class OVOEnergyAUSensor(CoordinatorEntity[OVOEnergyAUDataUpdateCoordinator], Sen
 
         statistic_id = self.entity_id
         
-        # Get the last statistic to determine the running total (sum)
-        # Use async_add_executor_job to avoid blocking the event loop (database I/O)
-        last_stats = await self.hass.async_add_executor_job(
-            get_last_statistics, self.hass, 1, statistic_id, True, {"sum"}
+        # Determine the start time of our batch
+        # OVO API BUG: Returns 'Z' (UTC) but values are actually Local Time
+        # We must strip the API's timezone and apply HA's local timezone
+        first_entry_time = dt_util.parse_datetime(entries[0]["period_from"])
+        if first_entry_time:
+            first_entry_time = first_entry_time.replace(tzinfo=None).replace(tzinfo=dt_util.get_default_time_zone())
+        else:
+            # Fallback if parsing fails (unlikely)
+            first_entry_time = dt_util.now()
+            
+        # We need the sum from the statistic *immediately before* this batch
+        # to ensure we calculate the running total correctly.
+        # Otherwise we double-count if we use the "latest" stat (which is the end of the batch).
+        
+        # Look for stats in the 24 hours preceding the first entry
+        lookback_start = first_entry_time - timedelta(hours=24)
+        lookback_end = first_entry_time
+        
+        # We need to import statistics_during_period
+        from homeassistant.components.recorder.statistics import statistics_during_period
+
+        stats_history = await self.hass.async_add_executor_job(
+            statistics_during_period,
+            self.hass,
+            lookback_start,
+            lookback_end,
+            [statistic_id],
+            "hour",
+            None,
+            {"sum"}
         )
         
         last_sum = 0.0
-        if last_stats and statistic_id in last_stats and last_stats[statistic_id]:
-            last_sum = last_stats[statistic_id][0].get("sum") or 0.0
+        if stats_history and statistic_id in stats_history:
+            history_list = stats_history[statistic_id]
+            if history_list:
+                # Get the last one in the window
+                last_sum = history_list[-1].get("sum") or 0.0
 
         statistics = []
         current_sum = last_sum
@@ -376,21 +406,15 @@ class OVOEnergyAUSensor(CoordinatorEntity[OVOEnergyAUDataUpdateCoordinator], Sen
         for entry in entries:
             try:
                 # Parse timestamp (API format example: 2023-10-27T00:00:00)
-                # Ensure it's timezone aware (assume local AU time or UTC? usually API gives local)
-                # Note: OVO API typically returns local time. We need to handle this carefully.
-                # However, for simplicity, we'll parse as is. If simplejson/string, use fromisoformat.
-                
                 start_time_str = entry["period_from"]
-                # Assuming ISO format. If no timezone, we might need to add one.
-                # dt_util.parse_datetime handles most cases.
                 start_time = dt_util.parse_datetime(start_time_str)
                 
                 if start_time is None:
                     continue
 
-                # Ensure timezone awareness (default to configured HA timezone if missing)
-                if start_time.tzinfo is None:
-                    start_time = start_time.replace(tzinfo=dt_util.get_default_time_zone())
+                # OVO API BUG: Returns 'Z' (UTC) but values are actually Local Time
+                # We must strip the API's timezone and apply HA's local timezone
+                start_time = start_time.replace(tzinfo=None).replace(tzinfo=dt_util.get_default_time_zone())
 
                 consumption = float(entry.get("consumption", 0.0))
                 current_sum += consumption
